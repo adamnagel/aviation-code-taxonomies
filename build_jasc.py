@@ -30,14 +30,14 @@ def build_entry(row):
     g.add((uri, SKOS.inScheme, uri_scheme))
 
     ata = row['ATA style with dash'].strip()
-    g.add((uri, ata_chapter_code, Literal(ata)))
     if '-' in ata:
         subata = ata[3:]
         parent = ata[0:2]
 
-        # type it and add subchapter code
+        # type it and add chapter and subchapter code
         g.add((uri, RDF.type, type_ata_subchapter))
         g.add((uri, ata_subchapter_code, Literal(subata)))
+        g.add((uri, ata_chapter_code, Literal(parent)))
 
         # add links to parent in both directions
         uri_broader = NS[parent]
@@ -45,8 +45,9 @@ def build_entry(row):
         g.add((uri_broader, SKOS.narrower, uri))
 
     else:
-        # type it
+        # type it as a chapter
         g.add((uri, RDF.type, type_ata_chapter))
+        g.add((uri, ata_chapter_code, Literal(ata)))
 
 
 g = Graph()
