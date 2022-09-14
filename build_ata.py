@@ -19,33 +19,15 @@ type_ata_subchapter = NS_ATA.SubChapter
 # Program
 
 def build_entry(row):
-    uri = NS[row['4-Digit Number'].strip()]
+    uri = NS[row['Chapter Number'].strip()]
     g.add((uri, RDF.type, SKOS.Concept))
-    g.add((uri, jasc_code, Literal(row['4-Digit Number'].strip())))
-    g.add((uri, RDFS.label, Literal(row['Name'].strip())))
-    g.add((uri, ata_code, Literal(row['ATA style with dash'].strip())))
+    g.add((uri, RDF.type, type_ata_chapter))
+
+    g.add((uri, RDFS.label, Literal(row['ATA Chapter Name'].strip())))
+    g.add((uri, ata_code, Literal(row['Chapter Number'].strip())))
+    g.add((uri, ata_chapter_code, Literal(row['Chapter Number'].strip())))
 
     g.add((uri, SKOS.inScheme, uri_scheme))
-
-    ata = row['ATA style with dash'].strip()
-    if '-' in ata:
-        subata = ata[3:]
-        parent = ata[0:2]
-
-        # type it and add chapter and subchapter code
-        g.add((uri, RDF.type, type_ata_subchapter))
-        g.add((uri, ata_subchapter_code, Literal(subata)))
-        g.add((uri, ata_chapter_code, Literal(parent)))
-
-        # add links to parent in both directions
-        uri_broader = NS[parent]
-        g.add((uri, SKOS.broader, uri_broader))
-        g.add((uri_broader, SKOS.narrower, uri))
-
-    else:
-        # type it as a chapter
-        g.add((uri, RDF.type, type_ata_chapter))
-        g.add((uri, ata_chapter_code, Literal(ata)))
 
 
 g = Graph()
@@ -72,4 +54,4 @@ with open('ata_from_wikipedia.csv', newline='') as csvfile:
         build_entry(row)
 
 # print(g.serialize(format='ttl'))
-g.serialize('ata.ttl')
+g.serialize('ata-chapters.ttl')
