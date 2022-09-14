@@ -12,6 +12,8 @@ ata_code = NS_ATA.code
 jasc_code = NS_JASC.code
 ata_chapter_code = NS_ATA.chapter_code
 ata_subchapter_code = NS_ATA.subchapter_code
+jasc_title = NS_JASC.title
+ata_title = NS_ATA.title
 
 # Types
 type_ata_chapter = NS_ATA.Chapter
@@ -24,12 +26,17 @@ def build_entry(row):
     uri = NS[row['4-Digit Number'].strip()]
     g.add((uri, RDF.type, SKOS.Concept))
     g.add((uri, jasc_code, Literal(row['4-Digit Number'].strip())))
-    g.add((uri, RDFS.label, Literal(row['Name'].strip())))
+    g.add((uri, jasc_title, Literal(row['Name'].strip())))
     g.add((uri, ata_code, Literal(row['ATA style with dash'].strip())))
+    g.add((uri, ata_title, Literal(row['Name'].strip())))
 
     g.add((uri, SKOS.inScheme, uri_scheme))
 
     ata = row['ATA style with dash'].strip()
+
+    label = 'ATA {}: {}'.format(ata, row['Name'].strip())
+    g.add((uri, RDFS.label, Literal(label)))
+
     if '-' in ata:
         subata = ata[3:]
         parent = ata[0:2]

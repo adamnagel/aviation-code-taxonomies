@@ -10,6 +10,7 @@ NS = Namespace('http://www.airbus.com/ata/')
 ata_code = NS_ATA.code
 ata_chapter_code = NS_ATA.chapter_code
 ata_subchapter_code = NS_ATA.subchapter_code
+ata_title = NS_ATA.title
 
 # Types
 type_ata_chapter = NS_ATA.Chapter
@@ -23,7 +24,9 @@ def build_entry(row):
     g.add((uri, RDF.type, SKOS.Concept))
     g.add((uri, RDF.type, type_ata_chapter))
 
-    g.add((uri, RDFS.label, Literal(row['ATA Chapter Name'].strip())))
+    label = 'ATA {}: {}'.format(row['Chapter Number'].strip(), row['ATA Chapter Name'].strip())
+    g.add((uri, RDFS.label, Literal(label)))
+    g.add((uri, ata_title, Literal(row['ATA Chapter Name'].strip())))
     g.add((uri, ata_code, Literal(row['Chapter Number'].strip())))
     g.add((uri, ata_chapter_code, Literal(row['Chapter Number'].strip())))
 
