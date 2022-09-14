@@ -3,13 +3,11 @@ from rdflib.namespace import RDF, SKOS, RDFS, DCTERMS, OWL
 import csv
 
 # Namespaces
-NS = Namespace('http://www.airbus.com/jasc/2008/')
-NS_JASC = Namespace('http://www.airbus.com/jasc/2008/schema/')
 NS_ATA = Namespace('http://www.airbus.com/ata/schema/')
+NS = Namespace('http://www.airbus.com/ata/')
 
 # Properties
 ata_code = NS_ATA.code
-jasc_code = NS_JASC.code
 ata_chapter_code = NS_ATA.chapter_code
 ata_subchapter_code = NS_ATA.subchapter_code
 
@@ -52,28 +50,26 @@ def build_entry(row):
 
 g = Graph()
 g.bind('skos', SKOS)
-g.bind('jasc', NS_JASC)
 g.bind('ata', NS_ATA)
 g.bind('dc', DCTERMS)
 g.bind('owl', OWL)
 g.bind('', NS)
 
 # Define Ontology
-uri_ontology = NS.jasc_codes
+uri_ontology = NS.ata_chapters
 g.add((uri_ontology, RDF.type, OWL.Ontology))
-g.add((uri_ontology, DCTERMS.title, Literal('JASC Code Taxonomy')))
-g.add((uri_ontology, DCTERMS.description, Literal('SKOS taxonomy of Joint Aircraft System/Component (JASC) codes')))
+g.add((uri_ontology, DCTERMS.title, Literal('ATA Chapter Taxonomy')))
+g.add((uri_ontology, DCTERMS.description, Literal('SKOS taxonomy of Air Transport Association (ATA) chapters')))
 
 # Define Concept Scheme
-uri_scheme = NS.jasc_codes_scheme
+uri_scheme = NS.ata_chapter_scheme
 g.add((uri_scheme, RDF.type, SKOS.ConceptScheme))
-g.add((uri_scheme, RDFS.label, Literal('JASC Codes')))
-g.add((uri_scheme, DCTERMS.hasVersion, Literal('2008')))
+g.add((uri_scheme, RDFS.label, Literal('ATA Chapters')))
 
-with open('jasc_2008.csv', newline='') as csvfile:
+with open('ata_from_wikipedia.csv', newline='') as csvfile:
     reader = csv.DictReader(csvfile, delimiter=',')
     for row in reader:
         build_entry(row)
 
 # print(g.serialize(format='ttl'))
-g.serialize('jasc_2008.ttl')
+g.serialize('ata.ttl')
