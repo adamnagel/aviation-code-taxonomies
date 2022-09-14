@@ -1,6 +1,7 @@
 # This is a basic workflow to help you get started with Actions
 
 name: CI
+uses: actions/upload-artifact@v3.1.0
 
 # Controls when the workflow will run
 on:
@@ -28,3 +29,8 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: ./build.sh
+      
+      - uses: actions/upload-artifact@v3.1.0
+        with:
+          # name: 
+          path: ./*.ttl
