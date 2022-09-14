@@ -27,6 +27,10 @@ def build_entry(row):
     g.add((uri, ata_code, Literal(row['Chapter Number'].strip())))
     g.add((uri, ata_chapter_code, Literal(row['Chapter Number'].strip())))
 
+    # 2-way Top Concept declaration
+    g.add((uri, SKOS.topConceptOf, uri_scheme))
+    g.add((uri_scheme, SKOS.hasTopConcept, uri))
+
     g.add((uri, SKOS.inScheme, uri_scheme))
 
 

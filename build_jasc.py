@@ -49,6 +49,11 @@ def build_entry(row):
         g.add((uri, RDF.type, type_ata_chapter))
         g.add((uri, ata_chapter_code, Literal(ata)))
 
+        # 2-way Top Concept declaration.
+        # Only Chapters are Top Concepts (not Sub-Chapters
+        g.add((uri, SKOS.topConceptOf, uri_scheme))
+        g.add((uri_scheme, SKOS.hasTopConcept, uri))
+
 
 g = Graph()
 g.bind('skos', SKOS)
